@@ -97,10 +97,10 @@ app.post('/signup', (req, res, next) => {
     username : nameOfUser,
     passsword: passCode
   };
-  return models.users.get();
-  return models.users.create(newUser);
-  // console.log('REQUEST body username :', req.body.username);
-  // console.log('REQUEST body password :', req.body.password);
+  console.log('REQUEST body username :', req.body.username);
+  console.log('REQUEST body password :', req.body.password);
+  return models.Users.create(nameOfUser, passCode);
+  // return models.users.create(newUser);
 
 });
 
