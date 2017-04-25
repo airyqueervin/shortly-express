@@ -2,29 +2,20 @@ const utils = require('../lib/hashUtils');
 const Model = require('./model');
 const crypto = require('crypto');
 const Promise = require('bluebird');
-const request = Promise.promisify(require('request'), { multiArgs: true });
 
 
 // Write you user database model methods here
-class User extends Model {
-  constructor(){
-    super('user');
-    this.username = '';
-    this.password = '';
+class Users extends Model {
+  constructor() {
+    super('users');
   }
 
-  isUserValid(user) {
-    //check if user exists in database
+  create(options) {
+    options.password = utils.hashPassword(options.password);
+    console.log('hashPassword----', options.password);
+    return super.create.call(this, options);
   }
-
-  create(user, password) {
-    this.username = user;
-    this.password = utils.hashPassword(password);
-    //create user object, set the user to the user name, 
-    //hash the password, set the password to the password
-  }
-
-
 }
 
-module.exports = new Model('user');
+
+module.exports = new Users();

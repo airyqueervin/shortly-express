@@ -91,15 +91,24 @@ app.get('/signup', (req, res, next) => {
 });
 
 app.post('/signup', (req, res, next) => {
-  let nameOfUser = req.body.username;
-  let passCode = req.body.password;
-  let newUser = {
-    username : nameOfUser,
-    passsword: passCode
-  };
-  console.log('REQUEST body username :', req.body.username);
-  console.log('REQUEST body password :', req.body.password);
-  return models.Users.create(nameOfUser, passCode);
+  // let username = req.body.username;
+  // let passowrd = req.body.password;
+  return models.Users.get({'username': req.body.username}) 
+  .then( results => {
+    if (!results) {
+      models.Users.create(req.body);
+      console.log('REQ BODY', req.body);
+      res.redirect('/');
+    } else if (results) {
+      res.writeHead(301, {
+        'location': '/signup'
+      });
+      res.end();
+    }
+  })
+  .catch( err => {
+    console.error(err);
+  });
   // return models.users.create(newUser);
 
 });
