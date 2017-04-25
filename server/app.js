@@ -9,6 +9,8 @@ const db = require('./db');
 
 const app = express();
 
+console.log("hashing function :", utils);
+
 app.set('views', `${__dirname}/views`);
 app.set('view engine', 'ejs');
 app.use(partials());
@@ -85,14 +87,24 @@ app.get('/login', (req, res, next) => {
 });
 
 app.post('/login', (req, res, next) => {
+ // console.log("request body password :",req.body);
   return models.Users.get({'username': req.body.username}) 
   .then( results => {
+   // console.log("the results are :", results);
     if (!results) {
-      res.redirect('/signup');
+      res.redirect('/login');
     } else if (results) {
       res.redirect('/');
     }
     res.end();
+  }).then(results => {
+    var userPass = utils.hashPassword(req.body.password)
+    if(userPass === results.password){
+      console.log("is it hashed? :",results.password);
+      res.redirect('/login');
+    } else {
+      res.redirect('/');
+    }
   })
   .catch( err => {
     console.error(err);
@@ -106,8 +118,6 @@ app.get('/signup', (req, res, next) => {
 });
 
 app.post('/signup', (req, res, next) => {
-  // let username = req.body.username;
-  // let passowrd = req.body.password;
   return models.Users.get({'username': req.body.username}) 
   .then( results => {
     if (!results) {
@@ -124,8 +134,6 @@ app.post('/signup', (req, res, next) => {
   .catch( err => {
     console.error(err);
   });
-  // return models.users.create(newUser);
-
 });
 
 /************************************************************/
