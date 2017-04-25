@@ -84,6 +84,21 @@ app.get('/login', (req, res, next) => {
   res.render('login');
 });
 
+app.post('/login', (req, res, next) => {
+  return models.Users.get({'username': req.body.username}) 
+  .then( results => {
+    if (!results) {
+      res.redirect('/signup');
+    } else if (results) {
+      res.redirect('/');
+    }
+    res.end();
+  })
+  .catch( err => {
+    console.error(err);
+  });
+});
+
 
 
 app.get('/signup', (req, res, next) => {
