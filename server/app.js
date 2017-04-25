@@ -5,6 +5,7 @@ const partials = require('express-partials');
 const bodyParser = require('body-parser');
 const Auth = require('./middleware/auth');
 const models = require('./models');
+const db = require('./db');
 
 const app = express();
 
@@ -83,10 +84,25 @@ app.get('/login', (req, res, next) => {
   res.render('login');
 });
 
+
+
 app.get('/signup', (req, res, next) => {
   res.render('signup');
 });
 
+app.post('/signup', (req, res, next) => {
+  let nameOfUser = req.body.username;
+  let passCode = req.body.password;
+  let newUser = {
+    username : nameOfUser,
+    passsword: passCode
+  };
+  return models.users.get();
+  return models.users.create(newUser);
+  // console.log('REQUEST body username :', req.body.username);
+  // console.log('REQUEST body password :', req.body.password);
+
+});
 
 /************************************************************/
 // Handle the code parameter route last - if all other routes fail
